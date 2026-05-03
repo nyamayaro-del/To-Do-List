@@ -41,12 +41,46 @@ app.config["SECRET_KEY"] = secret_key
 mysql = MySQL(app)
 
 EMAIL_PATTERN = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+TASK_CATEGORIES = {
+    "education",
+    "exercise",
+    "food",
+    "personal",
+    "work",
+    "health",
+    "finance",
+    "other",
+}
+
+
+def to_iso(value):
+    if value is None:
+        return None
+    if isinstance(value, (datetime.datetime, datetime.date)):
+        return value.isoformat()
+    return str(value)
+
+
+def parse_task_datetime(value):
+    if not value:
+        return None
+
+    try:
+        return datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00")).replace(tzinfo=None)
+    except ValueError:
+        return None
 
 
 def normalize_task(task):
     return {
         "id": task["id"],
         "title": task["title"],
+        "description": task.get("description") or "",
+        "category": task.get("category") or "other",
+        "start_datetime": to_iso(task.get("start_datetime") or task.get("scheduled_at")),
+        "end_datetime": to_iso(task.get("end_datetime") or task.get("scheduled_at")),
+        "created_at": to_iso(task.get("created_at")),
+        "completed_at": to_iso(task.get("completed_at")),
         "completed": bool(task.get("completed", False)),
     }
 
@@ -176,18 +210,42 @@ def protected():
 def create_task():
     data = request.get_json(silent=True) or {}
     title = (data.get("title") or "").strip()
+    description = (data.get("description") or "").strip()
+    category = (data.get("category") or "other").strip().lower()
+    start_datetime = parse_task_datetime(data.get("start_datetime") or data.get("scheduled_at"))
+    end_datetime = parse_task_datetime(data.get("end_datetime") or data.get("scheduled_at"))
 
     if not title:
         return jsonify({"message": "Task title is required"}), 400
 
+    if not start_datetime:
+        return jsonify({"message": "Task start date and time are required"}), 400
+    if not end_datetime:
+        return jsonify({"message": "Task end date and time are required"}), 400
+    if end_datetime < start_datetime:
+        return jsonify({"message": "End datetime must be after start datetime"}), 400
+
+    if category not in TASK_CATEGORIES:
+        return jsonify({"message": "Unsupported task category"}), 400
+
     cur = mysql.connection.cursor()
     cur.execute(
-        "INSERT INTO tasks (user_id, title, completed) VALUES (%s, %s, %s)",
-        (g.current_user["id"], title, False),
+        """
+        INSERT INTO tasks (user_id, title, description, category, start_datetime, end_datetime, completed)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """,
+        (g.current_user["id"], title, description, category, start_datetime, end_datetime, False),
     )
     mysql.connection.commit()
     task_id = cur.lastrowid
-    cur.execute("SELECT id, title, completed FROM tasks WHERE id=%s", (task_id,))
+    cur.execute(
+        """
+        SELECT id, title, description, category, start_datetime, end_datetime, created_at, completed_at, completed
+        FROM tasks
+        WHERE id=%s
+        """,
+        (task_id,),
+    )
     task = cur.fetchone()
     cur.close()
 
@@ -200,7 +258,12 @@ def create_task():
 def get_tasks():
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT id, title, completed FROM tasks WHERE user_id=%s ORDER BY id DESC",
+        """
+        SELECT id, title, description, category, start_datetime, end_datetime, created_at, completed_at, completed
+        FROM tasks
+        WHERE user_id=%s
+        ORDER BY start_datetime ASC, id DESC
+        """,
         (g.current_user["id"],),
     )
     tasks = cur.fetchall()
@@ -224,9 +287,37 @@ def update_task(task_id):
         updates.append("title=%s")
         values.append(title)
 
+    if "description" in data:
+        updates.append("description=%s")
+        values.append((data.get("description") or "").strip())
+
+    if "category" in data:
+        category = (data.get("category") or "other").strip().lower()
+        if category not in TASK_CATEGORIES:
+            return jsonify({"message": "Unsupported task category"}), 400
+        updates.append("category=%s")
+        values.append(category)
+
+    if "start_datetime" in data:
+        start_datetime = parse_task_datetime(data.get("start_datetime"))
+        if not start_datetime:
+            return jsonify({"message": "Task start date and time are required"}), 400
+        updates.append("start_datetime=%s")
+        values.append(start_datetime)
+
+    if "end_datetime" in data:
+        end_datetime = parse_task_datetime(data.get("end_datetime"))
+        if not end_datetime:
+            return jsonify({"message": "Task end date and time are required"}), 400
+        updates.append("end_datetime=%s")
+        values.append(end_datetime)
+
     if "completed" in data:
+        completed = bool(data.get("completed"))
         updates.append("completed=%s")
-        values.append(bool(data.get("completed")))
+        values.append(completed)
+        updates.append("completed_at=%s")
+        values.append(datetime.datetime.utcnow() if completed else None)
 
     if not updates:
         return jsonify({"message": "No task changes provided"}), 400
@@ -245,7 +336,11 @@ def update_task(task_id):
         return jsonify({"message": "Task not found"}), 404
 
     cur.execute(
-        "SELECT id, title, completed FROM tasks WHERE id=%s AND user_id=%s",
+        """
+        SELECT id, title, description, category, start_datetime, end_datetime, created_at, completed_at, completed
+        FROM tasks
+        WHERE id=%s AND user_id=%s
+        """,
         (task_id, g.current_user["id"]),
     )
     task = cur.fetchone()

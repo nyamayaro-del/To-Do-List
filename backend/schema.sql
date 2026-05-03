@@ -1,23 +1,25 @@
--- Run this once against the todo_app database if your users table already exists.
--- This version is safe for existing rows: it creates temporary placeholder
--- emails before enforcing NOT NULL + UNIQUE.
-ALTER TABLE users
-  ADD COLUMN email VARCHAR(255) NULL AFTER username;
+-- Fresh database schema for the TaskFlow app.
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
+);
 
-UPDATE users
-SET email = CONCAT('user', id, '@todo.local')
-WHERE email IS NULL OR email = '';
-
-ALTER TABLE users
-  MODIFY email VARCHAR(255) NOT NULL;
-
-ALTER TABLE users
-  ADD UNIQUE KEY users_email_unique (email);
-
--- Reference shape for a fresh users table:
--- CREATE TABLE users (
---   id INT AUTO_INCREMENT PRIMARY KEY,
---   username VARCHAR(100) NOT NULL UNIQUE,
---   email VARCHAR(255) NOT NULL UNIQUE,
---   password VARCHAR(255) NOT NULL
--- );
+CREATE TABLE IF NOT EXISTS tasks (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  category VARCHAR(50) NOT NULL DEFAULT 'other',
+  start_datetime DATETIME NOT NULL,
+  end_datetime DATETIME NULL,
+  completed BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  completed_at DATETIME NULL,
+  CONSTRAINT tasks_user_id_fk
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE,
+  INDEX tasks_user_schedule_idx (user_id, start_datetime),
+  INDEX tasks_user_completed_idx (user_id, completed)
+);
