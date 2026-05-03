@@ -65,7 +65,7 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
   const glassPanel =
-    "rounded-2xl border border-white/20 bg-white/10 shadow-xl backdrop-blur-lg";
+    "rounded-2xl border border-slate-800/90 bg-slate-950/70 shadow-2xl shadow-black/30 backdrop-blur-xl";
   const completedTasks = tasks.filter((task) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
   const userName = currentUser?.username || "there";
@@ -80,9 +80,9 @@ export default function Dashboard() {
     Icon: LucideIcon;
     tone: string;
   }> = [
-    { label: "Total Tasks", value: tasks.length, Icon: ClipboardList, tone: "bg-indigo-500" },
-    { label: "Completed", value: completedTasks, Icon: CheckCircle2, tone: "bg-green-500" },
-    { label: "Pending", value: pendingTasks, Icon: Circle, tone: "bg-indigo-500" },
+    { label: "Total Tasks", value: tasks.length, Icon: ClipboardList, tone: "bg-blue-500/15 text-blue-300 shadow-blue-950/40" },
+    { label: "Completed", value: completedTasks, Icon: CheckCircle2, tone: "bg-green-500/15 text-green-300 shadow-green-950/40" },
+    { label: "Pending", value: pendingTasks, Icon: Circle, tone: "bg-purple-500/15 text-purple-300 shadow-purple-950/40" },
   ];
 
   const logout = useCallback(() => {
@@ -222,12 +222,12 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-500 p-4 text-white sm:p-6">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#1e1b4b_0,#0f172a_35%,#020617_72%)] p-4 text-white sm:p-6">
       <div className="mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-7xl flex-col gap-4 lg:min-h-[calc(100vh-3rem)] lg:flex-row">
         <aside className={`${glassPanel} flex flex-col justify-between p-4 lg:w-64 lg:p-6`}>
           <div>
             <div className="mb-6 flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-500 shadow-lg shadow-indigo-950/30">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-purple-600 shadow-lg shadow-purple-950/50">
                 <CheckSquare className="h-6 w-6" aria-hidden="true" />
               </div>
               <div>
@@ -243,8 +243,8 @@ export default function Dashboard() {
                   type="button"
                   className={`flex items-center gap-3 rounded-xl px-4 py-3 text-left transition duration-300 hover:bg-white/10 ${
                     label === "Dashboard"
-                      ? "bg-white/20 font-semibold text-white shadow-lg shadow-indigo-950/20"
-                      : "text-white/75"
+                      ? "bg-purple-500/20 font-semibold text-white shadow-lg shadow-purple-950/30 ring-1 ring-purple-400/20"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
@@ -256,7 +256,7 @@ export default function Dashboard() {
 
           <button
             onClick={logout}
-            className="mt-6 flex items-center gap-3 rounded-xl border border-red-300/30 bg-red-500/20 px-4 py-3 text-left text-sm font-semibold text-red-100 transition duration-300 hover:bg-red-500/30 hover:shadow-2xl"
+            className="mt-6 flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-left text-sm font-semibold text-red-300 transition duration-300 hover:bg-red-500/20 hover:text-red-100 hover:shadow-2xl"
           >
             <LogOut className="h-4 w-4" aria-hidden="true" />
             Logout
@@ -268,16 +268,16 @@ export default function Dashboard() {
             <div>
               <p className="mb-2 text-sm font-medium text-white/70">{message}</p>
               <h1 className="mt-1 text-2xl font-bold sm:text-3xl">Dashboard</h1>
-              <p className="mt-1 text-sm text-white/70">Good to see you, {userName}.</p>
+              <p className="mt-1 text-sm text-slate-400">Stay focused and finish strong, {userName}.</p>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="hidden rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm text-white/80 sm:block">
+              <div className="hidden rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-2 text-sm text-slate-300 sm:block">
                 {currentUser ? `Signed in as ${currentUser.username}` : "Checking session"}
               </div>
               <button
                 onClick={logout}
-                className="flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-950/20 transition duration-300 hover:bg-red-600 hover:shadow-2xl"
+                className="flex items-center gap-2 rounded-xl bg-red-500/90 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-950/40 transition duration-300 hover:bg-red-500 hover:shadow-2xl"
               >
                 <LogOut className="h-4 w-4" aria-hidden="true" />
                 Logout
@@ -295,8 +295,8 @@ export default function Dashboard() {
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm text-white/70">{label}</p>
-                  <p className="text-3xl font-bold text-white">{value}</p>
+                  <p className="text-sm text-slate-400">{label}</p>
+                  <p className="text-4xl font-bold text-white">{value}</p>
                 </div>
               </div>
             ))}
@@ -305,7 +305,7 @@ export default function Dashboard() {
           <section className={`${glassPanel} p-4 sm:p-6`}>
             <form onSubmit={handleAddTask} className="flex flex-col gap-3 sm:flex-row">
               <input
-                className="min-h-12 flex-1 rounded-xl border border-white/25 bg-white/20 px-4 py-3 text-white outline-none placeholder:text-white/55 transition duration-300 focus:border-indigo-300 focus:bg-white/25 focus:ring-2 focus:ring-indigo-400"
+                className="min-h-12 flex-1 rounded-xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none placeholder:text-slate-500 transition duration-300 focus:border-purple-400 focus:bg-slate-900 focus:ring-2 focus:ring-purple-500/40"
                 placeholder="What do you need to do?"
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
@@ -313,7 +313,7 @@ export default function Dashboard() {
 
               <button
                 type="submit"
-                className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-indigo-500 px-6 font-semibold text-white shadow-lg shadow-indigo-950/30 transition duration-300 hover:scale-[1.01] hover:bg-indigo-600 hover:shadow-2xl"
+                className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-purple-600 px-6 font-semibold text-white shadow-lg shadow-purple-950/50 transition duration-300 hover:scale-[1.01] hover:bg-purple-500 hover:shadow-2xl"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 Add Task
@@ -321,7 +321,7 @@ export default function Dashboard() {
             </form>
 
             {error && (
-              <p className="mt-4 rounded-xl border border-red-300/40 bg-red-500/15 px-4 py-3 text-sm text-red-100">
+              <p className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {error}
               </p>
             )}
@@ -333,13 +333,13 @@ export default function Dashboard() {
                 <ListTodo className="h-5 w-5" aria-hidden="true" />
                 My Tasks
               </h2>
-              <p className="text-sm text-white/65">{tasks.length} tasks</p>
+              <p className="text-sm text-slate-400">{tasks.length} tasks</p>
             </div>
 
             {loadingTasks ? (
-              <p className="rounded-xl border border-white/10 bg-white/10 p-4 text-white/70">Loading tasks...</p>
+              <p className="rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-slate-400">Loading tasks...</p>
             ) : tasks.length === 0 ? (
-              <p className="rounded-xl border border-white/10 bg-white/10 p-4 text-white/70">No tasks yet</p>
+              <p className="rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-slate-400">No tasks yet</p>
             ) : (
               <div className="space-y-3">
                 {tasks.map((task) => {
@@ -348,7 +348,7 @@ export default function Dashboard() {
                   return (
                     <div
                       key={task.id}
-                      className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-lg transition duration-300 hover:scale-[1.01] hover:bg-white/15 hover:shadow-2xl sm:flex-row sm:items-center sm:justify-between"
+                      className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-xl shadow-black/20 transition duration-300 hover:scale-[1.01] hover:border-purple-500/40 hover:bg-slate-900/90 hover:shadow-2xl sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div className="flex min-w-0 flex-1 items-center gap-3">
                         <button
@@ -356,8 +356,8 @@ export default function Dashboard() {
                           onClick={() => toggleTask(task)}
                           className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border transition duration-300 ${
                             task.completed
-                              ? "border-green-300 bg-green-500 text-white"
-                              : "border-white/40 bg-white/5 text-transparent hover:bg-white/15"
+                              ? "border-green-400 bg-green-500/90 text-white"
+                              : "border-slate-600 bg-slate-900 text-transparent hover:border-purple-400 hover:bg-purple-500/10"
                           }`}
                         >
                           <Check className="h-4 w-4" aria-hidden="true" />
@@ -365,7 +365,7 @@ export default function Dashboard() {
 
                         {isEditing ? (
                           <input
-                            className="min-h-11 min-w-0 flex-1 rounded-xl border border-white/25 bg-white/20 px-3 py-2 text-white outline-none placeholder:text-white/50 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-400"
+                            className="min-h-11 min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950/80 px-3 py-2 text-white outline-none placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40"
                             value={editingTitle}
                             onChange={(e) => setEditingTitle(e.target.value)}
                             autoFocus
@@ -375,13 +375,13 @@ export default function Dashboard() {
                             type="button"
                             className={`min-w-0 flex-1 text-left ${
                               task.completed
-                                ? "text-white/45 line-through"
+                                ? "text-slate-500 line-through"
                                 : "text-white"
                             }`}
                             onClick={() => toggleTask(task)}
                           >
                             <span className="block truncate font-semibold">{task.title}</span>
-                            <span className="mt-1 block text-xs text-white/55">
+                            <span className="mt-1 block text-xs text-slate-500">
                               {task.completed ? "Completed" : "Pending"}
                             </span>
                           </button>
@@ -394,7 +394,7 @@ export default function Dashboard() {
                             <button
                               type="button"
                               onClick={() => saveEditing(task)}
-                              className="flex items-center gap-2 rounded-xl bg-green-500 px-4 py-2 text-sm font-semibold text-white transition duration-300 hover:bg-green-600"
+                              className="flex items-center gap-2 rounded-xl bg-green-500/90 px-4 py-2 text-sm font-semibold text-white transition duration-300 hover:bg-green-500"
                             >
                               <Check className="h-4 w-4" aria-hidden="true" />
                               Save
@@ -403,7 +403,7 @@ export default function Dashboard() {
                             <button
                               type="button"
                               onClick={cancelEditing}
-                              className="rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white/80 transition duration-300 hover:bg-white/15"
+                              className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-300 transition duration-300 hover:bg-slate-800 hover:text-white"
                             >
                               Cancel
                             </button>
@@ -413,7 +413,7 @@ export default function Dashboard() {
                             <button
                               type="button"
                               onClick={() => startEditing(task)}
-                              className="flex items-center gap-2 rounded-xl border border-indigo-200/30 bg-indigo-500/25 px-4 py-2 text-sm font-semibold text-indigo-50 transition duration-300 hover:bg-indigo-500/40"
+                              className="flex items-center gap-2 rounded-xl border border-purple-400/20 bg-purple-500/15 px-4 py-2 text-sm font-semibold text-purple-200 transition duration-300 hover:bg-purple-500/25 hover:text-white"
                             >
                               <Pencil className="h-4 w-4" aria-hidden="true" />
                               Edit
@@ -422,7 +422,7 @@ export default function Dashboard() {
                             <button
                               type="button"
                               onClick={() => handleDelete(task.id)}
-                              className="flex items-center gap-2 rounded-xl border border-red-200/30 bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-100 transition duration-300 hover:bg-red-500/35"
+                              className="flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition duration-300 hover:bg-red-500/20 hover:text-red-100"
                             >
                               <Trash2 className="h-4 w-4" aria-hidden="true" />
                               Delete

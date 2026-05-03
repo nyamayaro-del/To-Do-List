@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { CheckSquare, Eye, EyeOff, Lock, Mail, ShieldCheck } from "lucide-react";
 import { loginUser, setAuthToken } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
@@ -10,8 +11,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const glassPanel =
-    "rounded-2xl border border-white/20 bg-white/10 shadow-xl backdrop-blur-lg";
+  const darkPanel =
+    "rounded-2xl border border-slate-800/90 bg-slate-950/70 shadow-2xl shadow-black/30 backdrop-blur-xl";
 
   const getErrorMessage = (err: unknown, fallback: string) => {
     if (
@@ -59,25 +60,31 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-500 px-4 py-8 text-white">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#1e1b4b_0,#0f172a_35%,#020617_72%)] px-4 py-8 text-white">
       <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <section className="hidden lg:block">
           <div className="mb-10 flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-xl bg-indigo-500 shadow-lg shadow-indigo-950/30">
-              <span className="text-2xl font-bold">✓</span>
+            <div className="grid h-12 w-12 place-items-center rounded-xl bg-purple-600 shadow-lg shadow-purple-950/50">
+              <CheckSquare className="h-7 w-7" aria-hidden="true" />
             </div>
             <div>
               <p className="text-2xl font-bold">TaskFlow</p>
-              <p className="text-sm text-white/60">Productive work, organized.</p>
+              <p className="text-sm text-slate-400">Productive work, organized.</p>
             </div>
           </div>
 
-          <h1 className="max-w-md text-4xl font-bold leading-tight">Welcome back to your productivity dashboard</h1>
-          <p className="mt-4 max-w-sm text-white/75">Sign in to manage tasks, track progress, and keep today moving with a cleaner workflow.</p>
+          <h1 className="max-w-md text-4xl font-bold leading-tight">
+            Welcome back to your dark workspace
+          </h1>
+          <p className="mt-4 max-w-sm text-slate-400">
+            Sign in to manage tasks, track progress, and move through your day
+            with a sharper workflow.
+          </p>
 
           <div className="mt-8 grid max-w-sm gap-3">
             {["Stay organized", "Track progress", "Work securely"].map((item) => (
-              <div key={item} className={`${glassPanel} p-4`}>
+              <div key={item} className={`${darkPanel} flex items-center gap-3 p-4`}>
+                <ShieldCheck className="h-5 w-5 text-purple-300" aria-hidden="true" />
                 <p className="font-semibold">{item}</p>
               </div>
             ))}
@@ -86,29 +93,39 @@ export default function Login() {
 
         <form
           onSubmit={handleLogin}
-          className={`${glassPanel} mx-auto w-full max-w-md p-6 transition duration-300 hover:scale-[1.01] hover:shadow-2xl sm:p-8`}
+          className={`${darkPanel} mx-auto w-full max-w-md p-6 transition duration-300 hover:scale-[1.01] hover:shadow-2xl sm:p-8`}
         >
           <div className="mb-6 text-center">
             <h2 className="text-2xl font-bold">Login</h2>
-            <p className="mt-2 text-sm text-white/70">Welcome back. Please login to your account.</p>
+            <p className="mt-2 text-sm text-slate-400">
+              Welcome back. Please login to your account.
+            </p>
           </div>
 
           <label className="mb-4 block">
-            <span className="mb-2 block text-sm font-semibold text-white/85">Email or Username</span>
-            <input
-              className="min-h-12 w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none placeholder:text-white/55 transition duration-300 focus:border-white/40 focus:bg-white/15 focus:ring-2 focus:ring-white/20"
-              placeholder="Enter email or username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <span className="mb-2 block text-sm font-semibold text-slate-200">
+              Email or Username
+            </span>
+            <div className="flex min-h-12 items-center rounded-xl border border-slate-700 bg-slate-950/80 transition duration-300 focus-within:border-purple-400 focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-purple-500/40">
+              <Mail className="ml-4 h-4 w-4 text-slate-500" aria-hidden="true" />
+              <input
+                className="min-w-0 flex-1 bg-transparent px-3 py-3 text-white outline-none placeholder:text-slate-500"
+                placeholder="Enter email or username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
           </label>
 
           <label className="mb-4 block">
-            <span className="mb-2 block text-sm font-semibold text-white/85">Password</span>
-            <div className="flex min-h-12 rounded-xl border border-white/20 bg-white/10 transition duration-300 focus-within:border-white/40 focus-within:bg-white/15 focus-within:ring-2 focus-within:ring-white/20">
+            <span className="mb-2 block text-sm font-semibold text-slate-200">
+              Password
+            </span>
+            <div className="flex min-h-12 items-center rounded-xl border border-slate-700 bg-slate-950/80 transition duration-300 focus-within:border-purple-400 focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-purple-500/40">
+              <Lock className="ml-4 h-4 w-4 text-slate-500" aria-hidden="true" />
               <input
                 type={showPassword ? "text" : "password"}
-                className="min-w-0 flex-1 rounded-l-xl bg-transparent px-4 py-3 text-white outline-none placeholder:text-white/55"
+                className="min-w-0 flex-1 bg-transparent px-3 py-3 text-white outline-none placeholder:text-slate-500"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -117,9 +134,14 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setShowPassword((visible) => !visible)}
-                className="rounded-r-xl px-4 text-sm font-semibold text-white/75 transition duration-300 hover:bg-white/10 hover:text-white"
+                className="rounded-r-xl px-4 text-slate-400 transition duration-300 hover:bg-white/10 hover:text-white"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden="true" />
+                )}
               </button>
             </div>
           </label>
@@ -127,22 +149,22 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 min-h-12 w-full rounded-xl bg-indigo-500 px-4 font-semibold text-white shadow-lg shadow-indigo-950/30 transition duration-300 hover:scale-[1.01] hover:bg-indigo-600 hover:shadow-2xl disabled:cursor-not-allowed disabled:bg-indigo-300"
+            className="mt-2 min-h-12 w-full rounded-xl bg-purple-600 px-4 font-semibold text-white shadow-lg shadow-purple-950/50 transition duration-300 hover:scale-[1.01] hover:bg-purple-500 hover:shadow-2xl disabled:cursor-not-allowed disabled:bg-purple-300"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
 
           {error && (
-            <p className="mt-4 rounded-xl border border-red-300/40 bg-red-500/15 px-4 py-3 text-sm text-red-100">
+            <p className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
               {error}
             </p>
           )}
 
-          <p className="mt-6 text-center text-sm text-white/70">
+          <p className="mt-6 text-center text-sm text-slate-400">
             Don't have an account?{" "}
             <button
               type="button"
-              className="font-semibold text-white transition duration-300 hover:text-indigo-100"
+              className="font-semibold text-purple-300 transition duration-300 hover:text-purple-200"
               onClick={() => navigate("/register")}
             >
               Register
