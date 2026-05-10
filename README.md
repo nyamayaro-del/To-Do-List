@@ -1,4 +1,4 @@
-# Nyamz — SecureTasks: Full-Stack Authenticated To‑Do App
+# TaskFlow: Full-Stack Authenticated To‑Do App
 
 A professional, secure, and responsive full-stack To-Do application demonstrating modern authentication workflows and software engineering best practices.
 
@@ -112,7 +112,7 @@ Badges above show primary technologies used.
 ## Folder Structure
 
 Example structure (trimmed for clarity):
-
+```bash
 TaskFlow/
 │
 ├── frontend/
@@ -154,10 +154,11 @@ TaskFlow/
 │       ├── login.png
 │       ├── register.png
 │       ├── dashboard.png
-│       └── protected.png
+│       ├── Analytics.png
+│       └── MyTasks.png
 │
 └── README.md
-
+```
 ## API Documentation
 
 Base URL: `http://localhost:8000` (development)
@@ -330,22 +331,32 @@ Notes:
 
 ---
 
-## Screenshots
+## 📸 Screenshots
 
-Replace placeholders with real screenshots in `docs/screenshots/`.
+### Login Page
+<p align="center">
+  <img src="docs/screenshots/login.png" alt="Login Page" width="800"/>
+</p>
 
-- Login page  
-  !Login
+### Register Page
+<p align="center">
+  <img src="docs/screenshots/register.png" alt="Register Page" width="800"/>
+</p>
 
-- Register page  
-  !Register
+### Dashboard Page
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="Dashboard Page" width="800"/>
+</p>
 
-- Dashboard page  
-  !Dashboard
+### Analytics Page
+<p align="center">
+  <img src="docs/screenshots/Analytics.png" alt="Analytics Page" width="800"/>
+</p>
 
-- Protected route page  
-  !Protected
-
+### My Tasks Page
+<p align="center">
+  <img src="docs/screenshots/MyTasks.png" alt="My Tasks Page" width="800"/>
+</p>
 ---
 
 ## Error Handling
@@ -385,13 +396,15 @@ Logging:
 
 ## Deployment
 
-Frontend deployment:
+### Frontend deployment:
 - Build static assets (`npm run build`) then deploy to Netlify, Vercel, or GitHub Pages.
 
-Backend deployment:
+### Backend Deployment
+
 - Host on Render, Heroku, Railway, or AWS Elastic Beanstalk.
-- Use Uvicorn + Gunicorn (production) behind a reverse proxy.
-- Ensure environment variables are configured and use managed DB for production.
+- Use Gunicorn in production behind a reverse proxy like Nginx.
+- Configure environment variables securely for production.
+- Use a managed PostgreSQL database for scalability and reliability.
 
 Suggested hosting:
 - Frontend: Vercel or Netlify  
@@ -428,9 +441,6 @@ This project demonstrates competency in:
 
 - AI & Machine Learning Student  
 - GitHub: https://github.com/nyamayaro-del 
-- LinkedIn: https://www.linkedin.com/in/<your-profile>  
-
-(Replace placeholders with your actual profiles.)
 
 ---
 
