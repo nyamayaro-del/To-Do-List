@@ -124,7 +124,7 @@ TaskFlow/
 │   │   │   ├── Login.tsx
 │   │   │   ├── Register.tsx
 │   │   │   ├── Dashboard.tsx
-│   │   │   └── ProtectedPage.tsx
+│   │   │   └── Analytics.tsx
 │   │   │
 │   │   ├── services/
 │   │   │   └── api.ts
